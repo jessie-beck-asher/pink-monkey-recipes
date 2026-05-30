@@ -1,0 +1,11 @@
+.home-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  padding: 0 10%;
+}
+input[type="search"] {
+  height: 2rem;
+  font-size: 1.5em;
+}

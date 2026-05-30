@@ -1,0 +1,23 @@
+.skip-to-main {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  padding: 0.5rem 1rem;
+  background: #fff;
+  color: #000;
+  font-weight: bold;
+  z-index: 100;
+  text-decoration: none;
+}
+
+.skip-to-main:focus {
+  top: 0;
+}
+
+:root {
+  --primary-teal: #156064;
+  --primary-mint:#00C49A;
+  --primary-yellow: #F8E16C;
+  --primary-pink: #FFC2B4;
+  --primary-coral: #FB8F67;
+}

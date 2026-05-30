@@ -1,0 +1,14 @@
+header {
+  display: grid;
+  grid-template-rows: auto auto;
+  align-items: center;
+  justify-content: center;
+}
+
+header a {
+  text-decoration: none;
+}
+
+header p {
+  font-size: 2em;
+}
