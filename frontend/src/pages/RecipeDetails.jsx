@@ -1,73 +1,115 @@
+import { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
-import DUMMY_RECIPES from "../../DUMMY_RECIPES";
 import "./RecipeDetails.css";
-
-function toSlug(title) {
-  return title.toLowerCase().replace(/\s+/g, "-");
-}
 
 export default function RecipeDetails() {
   const { name } = useParams();
-  const recipe = DUMMY_RECIPES.find((r) => toSlug(r.title) === name);
+  const [recipe, setRecipe] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("ingredients");
+  const viewRecorded = useRef(false);
+
+  useEffect(() => {
+    fetch(`/api/get-recipe/${name}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        setRecipe(data);
+        setLoading(false);
+      });
+
+    if (!viewRecorded.current) {
+      viewRecorded.current = true;
+      fetch(`/api/record-view/${name}`, { method: "POST" }).catch(() => {});
+    }
+  }, [name]);
+
+  if (loading) {
+    return (
+      <div className="recipe-details">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   if (!recipe) {
     return (
-      <div className="recipe-details recipe-not-found">
-        <p>Recipe not found.</p>
-        <Link to="/">Back to recipes</Link>
+      <div className="recipe-details">
+        <Link className="back-link" to="/">
+          ← Back to recipes
+        </Link>
+        <p className="recipe-not-found">Recipe not found.</p>
       </div>
     );
   }
 
   return (
     <div className="recipe-details">
-      <Link to="/" className="back-link">← Back to recipes</Link>
-      <Link to={`/recipe/${name}/edit`} className="edit-link">Edit Recipe</Link>
+      <Link to="/" className="back-link">
+        ← Back
+      </Link>
 
       <h1 className="recipe-title">{recipe.title}</h1>
-      <p className="recipe-description">{recipe.description}</p>
-
-      {recipe.tags?.length > 0 && (
-        <div className="recipe-tags">
-          {recipe.tags.map((tag) => (
-            <span key={tag} className="recipe-tag">{tag}</span>
-          ))}
-        </div>
-      )}
 
       {recipe.temperature && (
-        <p className="recipe-temperature">Temperature: <strong>{recipe.temperature}</strong></p>
+        <p>
+          Temperature: <strong>{recipe.temperature}</strong>
+        </p>
       )}
 
-      <section className="recipe-section">
-        <h2>Ingredients</h2>
-        <ul className="ingredients-list">
-          {recipe.ingredients.map(({ ingredient, measurement }) => (
-            <li key={ingredient}>
-              <span className="measurement">{measurement}</span> {ingredient}
-            </li>
-          ))}
-        </ul>
+      <div className="recipe-tabs">
+        <button
+          className={`recipe-tab${activeTab === "ingredients" ? " active" : ""}`}
+          onClick={() => setActiveTab("ingredients")}
+        >
+          Ingredients
+        </button>
+        <button
+          className={`recipe-tab${activeTab === "directions" ? " active" : ""}`}
+          onClick={() => setActiveTab("directions")}
+        >
+          Directions
+        </button>
+      </div>
+
+      <section className="recipe-section recipe-tab-content">
+        {activeTab === "ingredients" ? (
+          <ul className="ingredients-list">
+            {recipe.ingredients.map(({ ingredient, measurement }) => (
+              <li key={ingredient}>
+                <span className="measurement">
+                  {ingredient} ({measurement})
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <ol className="directions-list">
+            {recipe.directions
+              .sort((a, b) => a.sequence - b.sequence)
+              .map(({ sequence, step }) => (
+                <li key={sequence}>
+                  <span>
+                    {sequence}. {step}
+                  </span>
+                </li>
+              ))}
+          </ol>
+        )}
       </section>
 
-      <section className="recipe-section">
-        <h2>Directions</h2>
-        <ol className="directions-list">
-          {recipe.directions
-            .sort((a, b) => a.sequence - b.sequence)
-            .map(({ sequence, step }) => (
-              <li key={sequence}>{step}</li>
-            ))}
-        </ol>
-      </section>
+      <Link to={`/recipe/${name}/edit`} className="edit-link button-link">
+        Edit Recipe
+      </Link>
 
       {recipe.alternatives?.length > 0 && (
         <section className="recipe-section">
           <h2>Variations</h2>
           <ul className="alternatives-list">
-            {recipe.alternatives.map(({ alternative }, i) => (
+            {recipe.alternatives.map(({ user, alternative }, i) => (
               <li key={i}>
-                <strong>{alternative.user}:</strong> {alternative.alternative}
+                <span>
+                  <strong>{user}:</strong> {alternative}
+                </span>
               </li>
             ))}
           </ul>
@@ -77,13 +119,24 @@ export default function RecipeDetails() {
       {recipe.stories?.length > 0 && (
         <section className="recipe-section recipe-stories">
           <h2>Stories</h2>
-          {recipe.stories.map(({ story }, i) => (
+          {recipe.stories.map(({ user, story }, i) => (
             <div key={i}>
-              <strong>{story.user}:</strong>
-              <p>{story.story}</p>
+              <span>
+                <strong>{user}:</strong>
+              </span>
+              <p>{story}</p>
             </div>
           ))}
         </section>
+      )}
+      {recipe.tags?.length > 0 && (
+        <div className="recipe-tags">
+          {recipe.tags.map((tag) => (
+            <span key={tag} className="recipe-tag">
+              {tag}
+            </span>
+          ))}
+        </div>
       )}
     </div>
   );

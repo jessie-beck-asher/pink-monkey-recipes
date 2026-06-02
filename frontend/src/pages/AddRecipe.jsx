@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const emptyIngredient = () => ({ ingredient: "", measurement: "" });
 const emptyDirection = () => ({ step: "" });
@@ -6,6 +7,7 @@ const emptyStory = () => ({ user: "", story: "" });
 const emptyAlternative = () => ({ user: "", alternative: "" });
 
 export default function AddRecipe() {
+  const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [temperature, setTemperature] = useState("");
@@ -14,10 +16,11 @@ export default function AddRecipe() {
   const [stories, setStories] = useState([emptyStory()]);
   const [alternatives, setAlternatives] = useState([emptyAlternative()]);
   const [tags, setTags] = useState("");
+  const [error, setError] = useState(null);
 
   function updateList(list, setList, index, field, value) {
     const updated = list.map((item, i) =>
-      i === index ? { ...item, [field]: value } : item
+      i === index ? { ...item, [field]: value } : item,
     );
     setList(updated);
   }
@@ -30,27 +33,52 @@ export default function AddRecipe() {
     setList(list.filter((_, i) => i !== index));
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
+    setError(null);
+
     const recipe = {
       title,
       description,
       temperature,
       ingredients,
       directions: directions.map((d, i) => ({ sequence: i + 1, step: d.step })),
-      stories: stories.map((s) => ({ story: s })),
-      alternatives: alternatives.map((a) => ({ alternative: a })),
-      tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
+      stories: stories.filter((s) => s.story.trim()).map((s) => ({ ...s, user: "Jessie" })),
+      alternatives: alternatives.filter((a) => a.alternative.trim()).map((a) => ({ ...a, user: "Jessie" })),
+      tags: tags
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean),
     };
-    console.log("Submitted recipe:", recipe);
+
+    try {
+      console.log(recipe);
+      const response = await fetch("/api/add-recipe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(recipe),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Failed to save recipe.");
+      }
+
+      navigate("/");
+    } catch (err) {
+      setError(err.message);
+    }
   }
 
   return (
     <div className="add-recipe-page">
+      <Link to="/" className="back-link">
+        ← Back to home
+      </Link>
       <h1>Add Recipe</h1>
       <form onSubmit={handleSubmit}>
         <label>
-          Title
+          <span>Title</span>
           <input
             type="text"
             value={title}
@@ -60,7 +88,7 @@ export default function AddRecipe() {
         </label>
 
         <label>
-          Description
+          <span>Description</span>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -69,7 +97,7 @@ export default function AddRecipe() {
         </label>
 
         <label>
-          Temperature
+          <span>Temperature</span>
           <input
             type="text"
             value={temperature}
@@ -87,7 +115,13 @@ export default function AddRecipe() {
                 placeholder="Ingredient"
                 value={item.ingredient}
                 onChange={(e) =>
-                  updateList(ingredients, setIngredients, i, "ingredient", e.target.value)
+                  updateList(
+                    ingredients,
+                    setIngredients,
+                    i,
+                    "ingredient",
+                    e.target.value,
+                  )
                 }
                 required
               />
@@ -96,18 +130,34 @@ export default function AddRecipe() {
                 placeholder="Measurement"
                 value={item.measurement}
                 onChange={(e) =>
-                  updateList(ingredients, setIngredients, i, "measurement", e.target.value)
+                  updateList(
+                    ingredients,
+                    setIngredients,
+                    i,
+                    "measurement",
+                    e.target.value,
+                  )
                 }
                 required
               />
               {ingredients.length > 1 && (
-                <button type="button" onClick={() => removeItem(ingredients, setIngredients, i)}>
+                <button
+                  type="button"
+                  className="button-link remove-button"
+                  onClick={() => removeItem(ingredients, setIngredients, i)}
+                >
                   Remove
                 </button>
               )}
             </div>
           ))}
-          <button type="button" onClick={() => addItem(ingredients, setIngredients, emptyIngredient)}>
+          <button
+            type="button"
+            className="button-link add-button"
+            onClick={() =>
+              addItem(ingredients, setIngredients, emptyIngredient)
+            }
+          >
             + Add Ingredient
           </button>
         </fieldset>
@@ -121,18 +171,32 @@ export default function AddRecipe() {
                 placeholder="Step"
                 value={item.step}
                 onChange={(e) =>
-                  updateList(directions, setDirections, i, "step", e.target.value)
+                  updateList(
+                    directions,
+                    setDirections,
+                    i,
+                    "step",
+                    e.target.value,
+                  )
                 }
                 required
               />
               {directions.length > 1 && (
-                <button type="button" onClick={() => removeItem(directions, setDirections, i)}>
+                <button
+                  type="button"
+                  className="button-link remove-button"
+                  onClick={() => removeItem(directions, setDirections, i)}
+                >
                   Remove
                 </button>
               )}
             </div>
           ))}
-          <button type="button" onClick={() => addItem(directions, setDirections, emptyDirection)}>
+          <button
+            type="button"
+            className="button-link add-button"
+            onClick={() => addItem(directions, setDirections, emptyDirection)}
+          >
             + Add Step
           </button>
         </fieldset>
@@ -149,13 +213,21 @@ export default function AddRecipe() {
                 }
               />
               {stories.length > 1 && (
-                <button type="button" onClick={() => removeItem(stories, setStories, i)}>
+                <button
+                  type="button"
+                  className="button-link remove-button"
+                  onClick={() => removeItem(stories, setStories, i)}
+                >
                   Remove
                 </button>
               )}
             </div>
           ))}
-          <button type="button" onClick={() => addItem(stories, setStories, emptyStory)}>
+          <button
+            type="button"
+            className="button-link add-button"
+            onClick={() => addItem(stories, setStories, emptyStory)}
+          >
             + Add Story
           </button>
         </fieldset>
@@ -168,17 +240,33 @@ export default function AddRecipe() {
                 placeholder="Alternative"
                 value={item.alternative}
                 onChange={(e) =>
-                  updateList(alternatives, setAlternatives, i, "alternative", e.target.value)
+                  updateList(
+                    alternatives,
+                    setAlternatives,
+                    i,
+                    "alternative",
+                    e.target.value,
+                  )
                 }
               />
               {alternatives.length > 1 && (
-                <button type="button" onClick={() => removeItem(alternatives, setAlternatives, i)}>
+                <button
+                  className="button-link remove-button"
+                  type="button"
+                  onClick={() => removeItem(alternatives, setAlternatives, i)}
+                >
                   Remove
                 </button>
               )}
             </div>
           ))}
-          <button type="button" onClick={() => addItem(alternatives, setAlternatives, emptyAlternative)}>
+          <button
+            type="button"
+            className="button-link add-button"
+            onClick={() =>
+              addItem(alternatives, setAlternatives, emptyAlternative)
+            }
+          >
             + Add Alternative
           </button>
         </fieldset>
@@ -193,7 +281,10 @@ export default function AddRecipe() {
           />
         </label>
 
-        <button type="submit">Save Recipe</button>
+        {error && <p className="error-message">{error}</p>}
+        <button type="submit" className="button-link">
+          Save Recipe
+        </button>
       </form>
     </div>
   );

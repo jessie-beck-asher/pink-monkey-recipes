@@ -3,9 +3,56 @@
   flex-direction: column;
   align-items: center;
   height: 100vh;
-  padding: 0 10%;
+  .monkey-wrapper {
+    margin: 10% 0 15% 0;
+  }
+  .heading-wrap {
+    display: flex;
+    margin: 0 16px;
+    width: 100%;
+    background-color: var(--primary-black);
+    color: var(--primary-white);
+  }
+  h2 {
+    padding: 0 5%;
+    margin: 5% 0;
+  }
 }
-input[type="search"] {
-  height: 2rem;
-  font-size: 1.5em;
+
+.search-wrap {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 25%;
+  p {
+    font-size: 2em;
+    margin-bottom: 5px;
+    text-align: center;
+  }
+  input[type="search"] {
+    height: 2em;
+    font-size: 1.8em;
+    border-radius: 0;
+    padding: 20px;
+    text-align: left;
+  }
+  .back-link {
+    align-self: end;
+  }
+}
+
+@media (min-width: 768px) {
+  .home-page {
+    .monkey-wrapper {
+      margin-bottom: 3%;
+    }
+    .search-wrap {
+      margin-bottom: 5%;
+    }
+    .recipe-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 30%);
+      padding: 2% 0;
+      height: auto;
+    }
+  }
 }

@@ -1,8 +1,10 @@
 import "./App.css";
 import HomePage from "./pages/HomePage";
 import RecipeDetails from "./pages/RecipeDetails";
+import SearchResults from "./pages/SearchResults";
 import AddRecipe from "./pages/AddRecipe";
 import EditRecipe from "./pages/EditRecipe";
+import LoginPage from "./pages/LoginPage";
 import { AuthContext, useAuth } from "./data/auth-context";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
@@ -13,7 +15,7 @@ function App() {
     e.preventDefault();
     const main = document.getElementById("main-content");
     const focusable = main?.querySelector(
-      'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])',
     );
     focusable?.focus();
   }
@@ -25,12 +27,14 @@ function App() {
           Skip to Main Content
         </a>
         <Header />
-        <main id="main-content" className="content-body">
+        <main id="main-content">
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/search" element={<SearchResults />} />
             <Route path="/recipe/:name" element={<RecipeDetails />} />
             <Route path="/add-recipe" element={<AddRecipe />} />
             <Route path="/recipe/:name/edit" element={<EditRecipe />} />
+            <Route path="/login" element={<LoginPage />} />
           </Routes>
         </main>
       </Router>

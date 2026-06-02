@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import DUMMY_RECIPES from "../../DUMMY_RECIPES";
+
+import "./EditRecipe.css";
 
 const emptyIngredient = () => ({ ingredient: "", measurement: "" });
 const emptyDirection = () => ({ step: "" });
@@ -14,39 +15,69 @@ function toSlug(title) {
 export default function EditRecipe() {
   const { name } = useParams();
   const navigate = useNavigate();
-  const recipe = DUMMY_RECIPES.find((r) => toSlug(r.title) === name);
+  const [loading, setLoading] = useState(true);
+  const [recipe, setRecipe] = useState(null);
 
-  const [title, setTitle] = useState(recipe?.title ?? "");
-  const [description, setDescription] = useState(recipe?.description ?? "");
-  const [temperature, setTemperature] = useState(recipe?.temperature ?? "");
-  const [ingredients, setIngredients] = useState(
-    recipe?.ingredients?.length ? recipe.ingredients : [emptyIngredient()]
-  );
-  const [directions, setDirections] = useState(
-    recipe?.directions?.length
-      ? recipe.directions.map(({ step }) => ({ step }))
-      : [emptyDirection()]
-  );
-  const [stories, setStories] = useState(
-    recipe?.stories?.length ? recipe.stories : [emptyStory()]
-  );
-  const [alternatives, setAlternatives] = useState(
-    recipe?.alternatives?.length ? recipe.alternatives : [emptyAlternative()]
-  );
-  const [tags, setTags] = useState(recipe?.tags?.join(", ") ?? "");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [temperature, setTemperature] = useState("");
+  const [ingredients, setIngredients] = useState([emptyIngredient()]);
+  const [directions, setDirections] = useState([emptyDirection()]);
+  const [stories, setStories] = useState([emptyStory()]);
+  const [alternatives, setAlternatives] = useState([emptyAlternative()]);
+  const [tags, setTags] = useState("");
+
+  useEffect(() => {
+    fetch(`/api/get-recipe/${name}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        setRecipe(data);
+        if (data) {
+          setTitle(data.title ?? "");
+          setDescription(data.description ?? "");
+          setTemperature(data.temperature ?? "");
+          setIngredients(
+            data.ingredients?.length ? data.ingredients : [emptyIngredient()],
+          );
+          setDirections(
+            data.directions?.length
+              ? data.directions.map(({ step }) => ({ step }))
+              : [emptyDirection()],
+          );
+          setStories(data.stories?.length ? data.stories : [emptyStory()]);
+          setAlternatives(
+            data.alternatives?.length
+              ? data.alternatives
+              : [emptyAlternative()],
+          );
+          setTags(data.tags?.join(", ") ?? "");
+        }
+        setLoading(false);
+      });
+  }, [name]);
+
+  if (loading) {
+    return (
+      <div className="add-recipe-page">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   if (!recipe) {
     return (
-      <div className="add-recipe-page">
-        <p>Recipe not found.</p>
-        <Link to="/">Back to recipes</Link>
+      <div className="recipe-details">
+        <Link className="back-link" to="/">
+          ← Back to recipes
+        </Link>
+        <p className="recipe-not-found">Recipe not found.</p>
       </div>
     );
   }
 
   function updateList(list, setList, index, field, value) {
     const updated = list.map((item, i) =>
-      i === index ? { ...item, [field]: value } : item
+      i === index ? { ...item, [field]: value } : item,
     );
     setList(updated);
   }
@@ -61,10 +92,7 @@ export default function EditRecipe() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    const index = DUMMY_RECIPES.indexOf(recipe);
-    if (index === -1) return;
-
-    DUMMY_RECIPES[index] = {
+    const updated = {
       ...recipe,
       title,
       description,
@@ -73,18 +101,29 @@ export default function EditRecipe() {
       directions: directions.map((d, i) => ({ sequence: i + 1, step: d.step })),
       stories,
       alternatives,
-      tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
+      tags: tags
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean),
     };
-
-    navigate(`/recipe/${toSlug(title)}`);
+    fetch(`/api/recipes/${name}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updated),
+    }).then((res) => {
+      if (res.ok) navigate(`/recipe/${toSlug(title)}`);
+    });
   }
 
   return (
-    <div className="add-recipe-page">
+    <div className="edit-recipe-page">
+      <button type="button" className="back-link" onClick={() => navigate(-1)}>
+        ← Back
+      </button>
       <h1>Edit Recipe</h1>
       <form onSubmit={handleSubmit}>
         <label>
-          Title
+          <span>Title</span>
           <input
             type="text"
             value={title}
@@ -94,7 +133,7 @@ export default function EditRecipe() {
         </label>
 
         <label>
-          Description
+          <span>Description</span>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -103,7 +142,7 @@ export default function EditRecipe() {
         </label>
 
         <label>
-          Temperature
+          <span>Temperature</span>
           <input
             type="text"
             value={temperature}
@@ -121,7 +160,13 @@ export default function EditRecipe() {
                 placeholder="Ingredient"
                 value={item.ingredient}
                 onChange={(e) =>
-                  updateList(ingredients, setIngredients, i, "ingredient", e.target.value)
+                  updateList(
+                    ingredients,
+                    setIngredients,
+                    i,
+                    "ingredient",
+                    e.target.value,
+                  )
                 }
                 required
               />
@@ -130,18 +175,34 @@ export default function EditRecipe() {
                 placeholder="Measurement"
                 value={item.measurement}
                 onChange={(e) =>
-                  updateList(ingredients, setIngredients, i, "measurement", e.target.value)
+                  updateList(
+                    ingredients,
+                    setIngredients,
+                    i,
+                    "measurement",
+                    e.target.value,
+                  )
                 }
                 required
               />
               {ingredients.length > 1 && (
-                <button type="button" onClick={() => removeItem(ingredients, setIngredients, i)}>
+                <button
+                  className="button-link remove-button"
+                  type="button"
+                  onClick={() => removeItem(ingredients, setIngredients, i)}
+                >
                   Remove
                 </button>
               )}
             </div>
           ))}
-          <button type="button" onClick={() => addItem(ingredients, setIngredients, emptyIngredient)}>
+          <button
+            className="button-link add-button"
+            type="button"
+            onClick={() =>
+              addItem(ingredients, setIngredients, emptyIngredient)
+            }
+          >
             + Add Ingredient
           </button>
         </fieldset>
@@ -155,18 +216,32 @@ export default function EditRecipe() {
                 placeholder="Step"
                 value={item.step}
                 onChange={(e) =>
-                  updateList(directions, setDirections, i, "step", e.target.value)
+                  updateList(
+                    directions,
+                    setDirections,
+                    i,
+                    "step",
+                    e.target.value,
+                  )
                 }
                 required
               />
               {directions.length > 1 && (
-                <button type="button" onClick={() => removeItem(directions, setDirections, i)}>
+                <button
+                  type="button"
+                  className="button-link remove-button"
+                  onClick={() => removeItem(directions, setDirections, i)}
+                >
                   Remove
                 </button>
               )}
             </div>
           ))}
-          <button type="button" onClick={() => addItem(directions, setDirections, emptyDirection)}>
+          <button
+            type="button"
+            className="button-link add-button"
+            onClick={() => addItem(directions, setDirections, emptyDirection)}
+          >
             + Add Step
           </button>
         </fieldset>
@@ -177,19 +252,28 @@ export default function EditRecipe() {
             <div key={i} className="list-row">
               <textarea
                 placeholder="Story"
+                className="story-input"
                 value={item.story}
                 onChange={(e) =>
                   updateList(stories, setStories, i, "story", e.target.value)
                 }
               />
               {stories.length > 1 && (
-                <button type="button" onClick={() => removeItem(stories, setStories, i)}>
+                <button
+                  type="button"
+                  className="button-link remove-button"
+                  onClick={() => removeItem(stories, setStories, i)}
+                >
                   Remove
                 </button>
               )}
             </div>
           ))}
-          <button type="button" onClick={() => addItem(stories, setStories, emptyStory)}>
+          <button
+            type="button"
+            className="button-link add-button"
+            onClick={() => addItem(stories, setStories, emptyStory)}
+          >
             + Add Story
           </button>
         </fieldset>
@@ -202,23 +286,39 @@ export default function EditRecipe() {
                 placeholder="Alternative"
                 value={item.alternative}
                 onChange={(e) =>
-                  updateList(alternatives, setAlternatives, i, "alternative", e.target.value)
+                  updateList(
+                    alternatives,
+                    setAlternatives,
+                    i,
+                    "alternative",
+                    e.target.value,
+                  )
                 }
               />
               {alternatives.length > 1 && (
-                <button type="button" onClick={() => removeItem(alternatives, setAlternatives, i)}>
+                <button
+                  type="button"
+                  className="button-link remove-button"
+                  onClick={() => removeItem(alternatives, setAlternatives, i)}
+                >
                   Remove
                 </button>
               )}
             </div>
           ))}
-          <button type="button" onClick={() => addItem(alternatives, setAlternatives, emptyAlternative)}>
+          <button
+            type="button"
+            className="button-link add-button"
+            onClick={() =>
+              addItem(alternatives, setAlternatives, emptyAlternative)
+            }
+          >
             + Add Alternative
           </button>
         </fieldset>
 
         <label>
-          Tags (comma-separated)
+          <span>Tags (comma-separated, improves search results)</span>
           <input
             type="text"
             value={tags}
@@ -227,7 +327,9 @@ export default function EditRecipe() {
           />
         </label>
 
-        <button type="submit">Save Changes</button>
+        <button type="submit" className="button-link save-button">
+          Save Changes
+        </button>
       </form>
     </div>
   );

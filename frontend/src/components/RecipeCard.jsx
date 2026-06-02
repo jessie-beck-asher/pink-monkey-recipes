@@ -8,8 +8,7 @@ function toSlug(title) {
 export default function RecipeCard({ title, description }) {
   return (
     <Link to={`/recipe/${toSlug(title)}`} className="recipe-card-link">
-      <h2>{title}</h2>
-      <p>{description}</p>
+      <h3>{title}</h3>
     </Link>
   );
 }

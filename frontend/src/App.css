@@ -1,10 +1,26 @@
+:root {
+  --primary-pink: #ff69b4;
+  --primary-black: #000000;
+  --primary-blue: #007fff;
+  --primary-green: #0a8754;
+  --primary-yellow: #f4e04d;
+  --primary-white: #f5f4f0;
+}
+
+body,
+input,
+a,
+textarea {
+  background-color: var(--primary-white);
+}
 .skip-to-main {
+  font-family: "Open Sans", sans-serif;
   position: absolute;
   top: -100%;
   left: 0;
   padding: 0.5rem 1rem;
-  background: #fff;
-  color: #000;
+  background: var(--primary-black);
+  color: var(--primary-white);
   font-weight: bold;
   z-index: 100;
   text-decoration: none;
@@ -14,10 +30,60 @@
   top: 0;
 }
 
-:root {
-  --primary-teal: #156064;
-  --primary-mint:#00C49A;
-  --primary-yellow: #F8E16C;
-  --primary-pink: #FFC2B4;
-  --primary-coral: #FB8F67;
+h1,
+h2,
+h3 {
+  font-family: "TruthDare";
 }
+
+h2,
+h3 {
+  font-size: 2.5em;
+}
+
+label {
+  font-family: "Open Sans", sans-serif;
+}
+
+p,
+input,
+span,
+textarea,
+legend {
+  font-size: 1.5em;
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+.button-link {
+  border: 1px solid black;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  min-width: 100px;
+  max-width: 200px;
+  color: black;
+  box-shadow: -0.2rem 0.2rem black;
+  background-color: var(--primary-yellow);
+  font-size: 1.5rem;
+  font-family: "Open Sans", sans-serif;
+}
+
+.back-link {
+  display: inline-block;
+  font-weight: 500;
+  font-size: 1.5em;
+  color: black;
+  font-family: "Open Sans";
+  /* background-color: white; */
+  border: none;
+  text-decoration: underline;
+  margin-top: 6px;
+}
+
+/* .back-link:hover {
+  text-decoration: underline;
+} */

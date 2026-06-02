@@ -1,0 +1,36 @@
+.search-results {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.search-results-heading {
+  font-size: 2.5rem;
+  margin: 24px 0 16px;
+  border-bottom: 2px solid var(--primary-black);
+  padding-bottom: 8px;
+}
+
+.no-results {
+  margin-top: 24px;
+  font-size: 1.2em;
+}
+
+.search-recipe-cards {
+  display: flex;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .search-results {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+  .search-recipe-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 30%);
+    padding: 2% 0;
+    height: auto;
+  }
+}
