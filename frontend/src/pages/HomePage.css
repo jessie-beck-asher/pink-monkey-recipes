@@ -17,6 +17,9 @@
     padding: 0 5%;
     margin: 5% 0;
   }
+  .recipe-card-link {
+    width: 80%;
+  }
 }
 
 .search-wrap {
@@ -47,12 +50,6 @@
     }
     .search-wrap {
       margin-bottom: 5%;
-    }
-    .recipe-cards {
-      display: grid;
-      grid-template-columns: repeat(3, 30%);
-      padding: 2% 0;
-      height: auto;
     }
   }
 }

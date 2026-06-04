@@ -7,6 +7,7 @@ import EditRecipe from "./pages/EditRecipe";
 import LoginPage from "./pages/LoginPage";
 import { AuthContext, useAuth } from "./data/auth-context";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { useEffect } from "react";
 
 import Header from "./components/Header";
 

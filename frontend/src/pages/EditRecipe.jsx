@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { AuthContext } from "../data/auth-context";
 
 import "./EditRecipe.css";
 
@@ -13,6 +14,7 @@ function toSlug(title) {
 }
 
 export default function EditRecipe() {
+  const { token, username } = useContext(AuthContext);
   const { name } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -44,11 +46,11 @@ export default function EditRecipe() {
               ? data.directions.map(({ step }) => ({ step }))
               : [emptyDirection()],
           );
-          setStories(data.stories?.length ? data.stories : [emptyStory()]);
+          setStories(data.stories?.length ? data.stories : [{ ...emptyStory(), user: username }]);
           setAlternatives(
             data.alternatives?.length
               ? data.alternatives
-              : [emptyAlternative()],
+              : [{ ...emptyAlternative(), user: username }],
           );
           setTags(data.tags?.join(", ") ?? "");
         }
@@ -99,16 +101,19 @@ export default function EditRecipe() {
       temperature,
       ingredients,
       directions: directions.map((d, i) => ({ sequence: i + 1, step: d.step })),
-      stories,
-      alternatives,
+      stories: stories.filter((s) => s.story.trim()),
+      alternatives: alternatives.filter((a) => a.alternative.trim()),
       tags: tags
         .split(",")
         .map((t) => t.trim())
         .filter(Boolean),
     };
-    fetch(`/api/recipes/${name}`, {
+    fetch(`/api/edit-recipe/${name}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify(updated),
     }).then((res) => {
       if (res.ok) navigate(`/recipe/${toSlug(title)}`);
@@ -272,7 +277,7 @@ export default function EditRecipe() {
           <button
             type="button"
             className="button-link add-button"
-            onClick={() => addItem(stories, setStories, emptyStory)}
+            onClick={() => addItem(stories, setStories, () => ({ story: "", user: username }))}
           >
             + Add Story
           </button>
@@ -310,7 +315,7 @@ export default function EditRecipe() {
             type="button"
             className="button-link add-button"
             onClick={() =>
-              addItem(alternatives, setAlternatives, emptyAlternative)
+              addItem(alternatives, setAlternatives, () => ({ alternative: "", user: username }))
             }
           >
             + Add Alternative

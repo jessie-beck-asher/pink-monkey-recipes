@@ -145,8 +145,8 @@ function MonkeyIcon({ width = 32, height = 32, color, className }) {
         fillRule="nonzero"
       />
       <g transform="matrix(1, 0, 0, 1, 201, 347)">
-        <g clip-path="url(#9487dbca4a)">
-          <g clip-path="url(#857b78cbe1)">
+        <g clipPath="url(#9487dbca4a)">
+          <g clipPath="url(#857b78cbe1)">
             <g fill="#ffffff" fillOpacity="1">
               <g transform="translate(5.355768, 79.734797)">
                 <g>
@@ -216,7 +216,7 @@ function MonkeyIcon({ width = 32, height = 32, color, className }) {
               </g>
             </g>
           </g>
-          <g clip-path="url(#5c1dd72fac)">
+          <g clipPath="url(#5c1dd72fac)">
             <g fill="#ffffff" fillOpacity="1">
               <g transform="translate(518.089319, 79.734797)">
                 <g>

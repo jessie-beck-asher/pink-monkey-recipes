@@ -1,9 +1,11 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { useParams, Link } from "react-router-dom";
+import { AuthContext } from "../data/auth-context";
 import "./RecipeDetails.css";
 
 export default function RecipeDetails() {
   const { name } = useParams();
+  const { isLoggedIn } = useContext(AuthContext);
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("ingredients");
@@ -97,9 +99,11 @@ export default function RecipeDetails() {
         )}
       </section>
 
-      <Link to={`/recipe/${name}/edit`} className="edit-link button-link">
-        Edit Recipe
-      </Link>
+      {isLoggedIn && (
+        <Link to={`/recipe/${name}/edit`} className="edit-link button-link">
+          Edit Recipe
+        </Link>
+      )}
 
       {recipe.alternatives?.length > 0 && (
         <section className="recipe-section">
@@ -116,7 +120,7 @@ export default function RecipeDetails() {
         </section>
       )}
 
-      {recipe.stories?.length > 0 && (
+      {isLoggedIn && recipe.stories?.length > 0 && (
         <section className="recipe-section recipe-stories">
           <h2>Stories</h2>
           {recipe.stories.map(({ user, story }, i) => (

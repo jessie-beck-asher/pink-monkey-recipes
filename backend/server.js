@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
 import recipeRoutes from "./routes/recipeRoutes.js";
+import memberRoutes from "./routes/memberRoutes.js";
 
 dotenv.config({ path: "./local.env" });
 
@@ -9,6 +10,7 @@ const app = express();
 app.use(express.json());
 
 app.use("/api", recipeRoutes);
+app.use("/api", memberRoutes);
 
 app.use((error, req, res, next) => {
   if (res.headerSent) return next(error);

@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../data/auth-context";
 
 const emptyIngredient = () => ({ ingredient: "", measurement: "" });
 const emptyDirection = () => ({ step: "" });
@@ -7,6 +8,7 @@ const emptyStory = () => ({ user: "", story: "" });
 const emptyAlternative = () => ({ user: "", alternative: "" });
 
 export default function AddRecipe() {
+  const { token } = useContext(AuthContext);
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -43,8 +45,12 @@ export default function AddRecipe() {
       temperature,
       ingredients,
       directions: directions.map((d, i) => ({ sequence: i + 1, step: d.step })),
-      stories: stories.filter((s) => s.story.trim()).map((s) => ({ ...s, user: "Jessie" })),
-      alternatives: alternatives.filter((a) => a.alternative.trim()).map((a) => ({ ...a, user: "Jessie" })),
+      stories: stories
+        .filter((s) => s.story.trim())
+        .map((s) => ({ ...s, user: "Jessie" })),
+      alternatives: alternatives
+        .filter((a) => a.alternative.trim())
+        .map((a) => ({ ...a, user: "Jessie" })),
       tags: tags
         .split(",")
         .map((t) => t.trim())
@@ -52,10 +58,12 @@ export default function AddRecipe() {
     };
 
     try {
-      console.log(recipe);
       const response = await fetch("/api/add-recipe", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(recipe),
       });
 

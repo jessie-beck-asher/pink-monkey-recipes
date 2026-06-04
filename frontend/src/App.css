@@ -5,6 +5,7 @@
   --primary-green: #0a8754;
   --primary-yellow: #f4e04d;
   --primary-white: #f5f4f0;
+  --primary-red: #c81313;
 }
 
 body,
@@ -84,6 +85,7 @@ legend {
   margin-top: 6px;
 }
 
-/* .back-link:hover {
-  text-decoration: underline;
-} */
+.login-error {
+  color: var(--primary-red);
+  font-style: italic;
+}

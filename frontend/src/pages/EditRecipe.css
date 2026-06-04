@@ -45,5 +45,18 @@
       display: block;
       margin: 0 auto;
     }
+    textarea,
+    input {
+      padding: 1%;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .edit-recipe-page,
+  .add-recipe-page {
+    form {
+      margin: 0 20%;
+    }
   }
 }
