@@ -9,7 +9,7 @@ export const login = async (req, res, next) => {
   let hashedPassword;
   try {
     hashedPassword = await bcrypt.hash(password, 12);
-    // console.log(hashedPassword);
+    console.log(hashedPassword);
   } catch (err) {
     return next(new HttpError("Failed to hash password.", 500));
   }

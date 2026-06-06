@@ -2,4 +2,8 @@
 ./backend/node_modules
 node_modules
 ./backend/local.env
+./backend/production.env
 local.env
+production.env
+./backend/production.env
+.env

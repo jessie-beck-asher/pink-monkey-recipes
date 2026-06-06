@@ -112,7 +112,7 @@
 }
 
 .recipe-stories {
-  div:not(:first-child(div)) {
+  div:not(:first-of-type) {
     margin-top: 15%;
   }
   p {
