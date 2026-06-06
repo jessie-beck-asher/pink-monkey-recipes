@@ -12,5 +12,10 @@ export default defineConfig(({ mode }) => {
         "/api": env.REACT_APP_BACKEND_URL,
       },
     },
+    preview: {
+      proxy: {
+        "/api": env.REACT_APP_BACKEND_URL,
+      },
+    },
   };
 });
