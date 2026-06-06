@@ -32,4 +32,4 @@ mongoose
     console.error("Error connecting to MongoDB:", error);
   });
 
-module.exports = app;
+export default app;
