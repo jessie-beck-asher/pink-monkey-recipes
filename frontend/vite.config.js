@@ -9,12 +9,12 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     server: {
       proxy: {
-        "/api": env.REACT_APP_BACKEND_URL,
+        "/api": env.VITE_BACKEND_URL,
       },
     },
     preview: {
       proxy: {
-        "/api": env.REACT_APP_BACKEND_URL,
+        "/api": env.VITE_BACKEND_URL,
       },
     },
   };
