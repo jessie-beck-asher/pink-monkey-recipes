@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import express from "express";
-import mongoose from "mongoose";
+import dbConnect from "./utils/dbConnect.js";
 import recipeRoutes from "./routes/recipeRoutes.js";
 import memberRoutes from "./routes/memberRoutes.js";
 
@@ -10,6 +10,15 @@ dotenv.config({ path: envFile });
 
 const app = express();
 app.use(express.json());
+
+app.use(async (req, res, next) => {
+  try {
+    await dbConnect();
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
 app.use("/api", recipeRoutes);
 app.use("/api", memberRoutes);
@@ -21,15 +30,8 @@ app.use((error, req, res, next) => {
     .json({ message: error.message || "An unknown error occurred." });
 });
 
-mongoose
-  .connect(
-    `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER}.mongodb.net/${process.env.MONGODB_DATABASE}?retryWrites=true&w=majority`,
-  )
-  .then(() => {
-    app.listen(process.env.PORT || 3001);
-  })
-  .catch((error) => {
-    console.error("Error connecting to MongoDB:", error);
-  });
+if (process.env.NODE_ENV !== "production") {
+  app.listen(process.env.PORT);
+}
 
 export default app;
