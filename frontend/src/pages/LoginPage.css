@@ -3,10 +3,11 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 50vh;
-  width: 100vw;
+  min-height: 50vh;
+  padding: 2rem 1rem;
   h1 {
     font-size: 3em;
+    margin-top: 0;
   }
   .login-text {
     text-align: center;
@@ -25,7 +26,10 @@
     }
     button {
       width: 100%;
-      margin-top: 15%;
+      margin-top: 8%;
     }
+  }
+  .login-error {
+    padding: 0 8%;
   }
 }

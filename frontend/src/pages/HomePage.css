@@ -4,7 +4,10 @@
   align-items: center;
   height: 100vh;
   .monkey-wrapper {
-    margin: 10% 0 15% 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10%;
   }
   .heading-wrap {
     display: flex;
@@ -37,6 +40,7 @@
     border-radius: 0;
     padding: 20px;
     text-align: left;
+    border: 1px solid black;
   }
   .back-link {
     align-self: end;

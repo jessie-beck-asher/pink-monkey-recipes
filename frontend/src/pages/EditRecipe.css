@@ -52,6 +52,23 @@
   }
 }
 
+@media (max-width: 767px) {
+  .edit-recipe-page,
+  .add-recipe-page {
+    form {
+      .list-row {
+        flex-direction: column;
+        input,
+        textarea {
+          width: 100%;
+          margin-right: 0;
+          margin-bottom: 3%;
+        }
+      }
+    }
+  }
+}
+
 @media (min-width: 768px) {
   .edit-recipe-page,
   .add-recipe-page {

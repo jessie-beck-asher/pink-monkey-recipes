@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../data/auth-context";
+import "./EditRecipe.css";
 
 const emptyIngredient = () => ({ ingredient: "", measurement: "" });
 const emptyDirection = () => ({ step: "" });

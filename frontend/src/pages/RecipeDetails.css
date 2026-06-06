@@ -41,6 +41,7 @@
   flex: 1;
   padding: 10px 16px;
   font-weight: 600;
+  color: var(--primary-black);
   border: 2px solid var(--primary-black);
   background: transparent;
   cursor: pointer;
@@ -126,16 +127,18 @@
 }
 
 .recipe-tags {
-  display: grid;
-  grid-template-columns: repeat(3, auto);
+  display: flex;
+  flex-wrap: wrap;
   gap: 3%;
+  width: 100%;
   span {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: fit-content;
     background-color: black;
     color: var(--primary-white);
-    padding: 8%;
+    padding: 4%;
     margin-bottom: 3%;
   }
 }
