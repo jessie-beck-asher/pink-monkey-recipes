@@ -35,6 +35,7 @@ h1,
 h2,
 h3 {
   font-family: "TruthDare";
+  src: url("/TruthDare.ttf") format("truetype");
 }
 
 h2,

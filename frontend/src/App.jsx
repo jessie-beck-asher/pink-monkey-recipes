@@ -1,15 +1,16 @@
+import React, { Suspense } from "react";
 import "./App.css";
 import HomePage from "./pages/HomePage";
-import RecipeDetails from "./pages/RecipeDetails";
-import SearchResults from "./pages/SearchResults";
-import AddRecipe from "./pages/AddRecipe";
-import EditRecipe from "./pages/EditRecipe";
-import LoginPage from "./pages/LoginPage";
 import { AuthContext, useAuth } from "./data/auth-context";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { useEffect } from "react";
-
 import Header from "./components/Header";
+
+const RecipeDetails = React.lazy(() => import("./pages/RecipeDetails"));
+const SearchResults = React.lazy(() => import("./pages/SearchResults"));
+const AddRecipe = React.lazy(() => import("./pages/AddRecipe"));
+const EditRecipe = React.lazy(() => import("./pages/EditRecipe"));
+const LoginPage = React.lazy(() => import("./pages/LoginPage"));
 
 function App() {
   function handleSkip(e) {
@@ -29,14 +30,16 @@ function App() {
         </a>
         <Header />
         <main id="main-content">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/search" element={<SearchResults />} />
-            <Route path="/recipe/:name" element={<RecipeDetails />} />
-            <Route path="/add-recipe" element={<AddRecipe />} />
-            <Route path="/recipe/:name/edit" element={<EditRecipe />} />
-            <Route path="/login" element={<LoginPage />} />
-          </Routes>
+          <Suspense fallback={<div className="loading">Loading...</div>}>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/search" element={<SearchResults />} />
+              <Route path="/recipe/:name" element={<RecipeDetails />} />
+              <Route path="/add-recipe" element={<AddRecipe />} />
+              <Route path="/recipe/:name/edit" element={<EditRecipe />} />
+              <Route path="/login" element={<LoginPage />} />
+            </Routes>
+          </Suspense>
         </main>
       </Router>
     </AuthContext.Provider>

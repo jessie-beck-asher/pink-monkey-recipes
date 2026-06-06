@@ -6,4 +6,3 @@ node_modules
 local.env
 production.env
 ./backend/production.env
-.env
