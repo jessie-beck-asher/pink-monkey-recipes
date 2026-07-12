@@ -3,14 +3,11 @@ function MonkeyIcon({ width = 32, height = 32, color, className }) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="15 0 960 540.000001"
-      style={{
-        width: "auto",
-        height: "35vh",
-        display: "block",
-        margin: 0,
-        padding: 0,
-      }}
-      preserveAspectRatio="none"
+      width={width}
+      height={height}
+      className={className}
+      style={{ color, display: "block" }}
+      aria-hidden="true"
     >
       <defs>
         <g />

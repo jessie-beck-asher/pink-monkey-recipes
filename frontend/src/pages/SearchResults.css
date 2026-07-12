@@ -1,39 +1,11 @@
-.search-results {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 24px 16px;
-}
-
 .search-results-heading {
-  font-size: 2.5rem;
-  margin: 24px 0 16px;
-  border-bottom: 2px solid var(--primary-black);
-  padding-bottom: 8px;
+  margin: var(--space-3) 0 var(--space-4);
 }
 
 .no-results {
-  margin-top: 24px;
-  font-size: 1.2em;
-}
-
-.search-recipe-cards {
-  display: grid;
-  grid-template-columns: 1fr;
-}
-
-@media (min-width: 768px) {
-  .search-results {
-    max-width: none;
-    margin: 0;
-    padding: 0;
-  }
-  .search-recipe-cards,
-  .recipe-cards {
-    display: grid;
-    grid-template-columns: repeat(3, 30%);
-    padding: 2% 0;
-    height: 100%;
-    align-content: start;
-    justify-content: center;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  color: var(--text-soft);
 }

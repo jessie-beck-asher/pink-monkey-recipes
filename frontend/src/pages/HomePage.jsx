@@ -28,33 +28,35 @@ export default function HomePage() {
   }
 
   return (
-    <div className="home-page">
-      <div className="monkey-wrapper">
-        <MonkeyIcon height="50vh" width="100vw" color="currentColor" />
-      </div>
-
-      <div className="search-wrap">
-        <form onSubmit={handleSearch}>
-          <label>
-            <input
-              type="search"
-              placeholder="Search recipes..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </label>
+    <div className="home-page page page-wide">
+      <section className="home-hero">
+        <MonkeyIcon width={250} height={140} color="var(--text)" />
+        <h1>Welcome to the family cookbook</h1>
+        <p className="home-tagline">
+          Every recipe here comes with a story. Find an old favorite, or add
+          one of your own.
+        </p>
+        <form className="home-search" onSubmit={handleSearch} role="search">
+          <input
+            type="search"
+            placeholder="Search for a recipe…"
+            aria-label="Search recipes"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <button type="submit" className="btn btn-primary">
+            Search
+          </button>
         </form>
-        <Link to="/search" className="back-link">
-          Browse All Recipes →
+        <Link to="/search" className="browse-all-link">
+          or browse all recipes →
         </Link>
-      </div>
+      </section>
 
       {recipes.length > 0 && (
-        <>
-          <div className="heading-wrap">
-            <h2>Recently Popular...</h2>
-          </div>
-          <div className="recipe-cards">
+        <section className="home-popular">
+          <h2>Family favorites right now</h2>
+          <div className="recipe-grid">
             {recipes.map((recipe, index) => (
               <RecipeCard
                 key={index}
@@ -63,7 +65,7 @@ export default function HomePage() {
               />
             ))}
           </div>
-        </>
+        </section>
       )}
     </div>
   );

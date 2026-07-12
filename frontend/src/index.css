@@ -5,10 +5,18 @@
   font-style: normal;
 }
 
-/* 
-#FF69B4 hotpink
-#000000 black
-#007FFF blue
-#0A8754 green
-#F4E04D yellow
-*/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}

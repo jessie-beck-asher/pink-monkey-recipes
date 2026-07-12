@@ -1,35 +1,26 @@
 .login-page {
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: center;
-  min-height: 50vh;
-  padding: 2rem 1rem;
-  h1 {
-    font-size: 3em;
-    margin-top: 0;
-  }
-  .login-text {
-    text-align: center;
-  }
-  form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    label {
-      font-size: 1.5em;
-    }
-    div {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    button {
-      width: 100%;
-      margin-top: 8%;
-    }
-  }
-  .login-error {
-    padding: 0 8%;
-  }
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  margin-top: var(--space-4);
+}
+
+.login-card h1 {
+  text-align: center;
+  margin-bottom: var(--space-2);
+}
+
+.login-text {
+  text-align: center;
+  color: var(--text-soft);
+  font-size: 0.95rem;
+  margin-bottom: var(--space-4);
+}
+
+.login-card .btn {
+  margin-top: var(--space-2);
 }

@@ -36,7 +36,7 @@ export default function SearchResults() {
   }, [query]);
 
   return (
-    <div className="search-results">
+    <div className="search-results page page-wide">
       <Link to="/" className="back-link">
         ← Back to home
       </Link>
@@ -44,13 +44,16 @@ export default function SearchResults() {
         {query ? <>Results for &ldquo;{query}&rdquo;</> : "All Recipes"}
       </h1>
       {loading ? (
-        <p>Loading...</p>
+        <p className="loading">Loading recipes…</p>
       ) : recipes.length === 0 ? (
-        <p className="no-results">
-          No recipes found for &ldquo;{query}&rdquo;.
-        </p>
+        <div className="no-results">
+          <p>We couldn&rsquo;t find any recipes for &ldquo;{query}&rdquo;.</p>
+          <Link to="/search" className="btn btn-quiet">
+            Browse all recipes instead
+          </Link>
+        </div>
       ) : (
-        <div className="search-recipe-cards">
+        <div className="recipe-grid">
           {recipes.map((recipe, i) => (
             <RecipeCard
               key={i}

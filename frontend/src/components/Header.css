@@ -1,20 +1,48 @@
-header {
+.site-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  div {
-    display: flex;
-    justify-content: end;
-    align-items: end;
-    gap: 1em;
-  }
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: var(--space-3);
 }
 
-header a {
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
   text-decoration: none;
-  color: black;
+  color: var(--text);
 }
 
-header p {
-  font-size: 2em;
+.brand-name {
+  font-family: "TruthDare", var(--font-heading);
+  font-size: 1.5rem;
+  letter-spacing: 0.02em;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-left: auto;
+}
+
+.user-chip {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--pink-700);
+  background: var(--pink-50);
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .brand-name {
+    font-size: 1.25rem;
+  }
 }

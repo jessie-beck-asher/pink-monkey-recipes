@@ -27,38 +27,49 @@ export default function RecipeDetails() {
 
   if (loading) {
     return (
-      <div className="recipe-details">
-        <p>Loading...</p>
+      <div className="recipe-details page">
+        <p className="loading">Loading recipe…</p>
       </div>
     );
   }
 
   if (!recipe) {
     return (
-      <div className="recipe-details">
+      <div className="recipe-details page">
         <Link className="back-link" to="/">
           ← Back to recipes
         </Link>
-        <p className="recipe-not-found">Recipe not found.</p>
+        <p className="loading">Recipe not found.</p>
       </div>
     );
   }
 
   return (
-    <div className="recipe-details">
+    <div className="recipe-details page">
       <Link to="/" className="back-link">
         ← Back
       </Link>
 
-      <h1 className="recipe-title">{recipe.title}</h1>
+      <div className="recipe-title-row">
+        <h1 className="recipe-title">{recipe.title}</h1>
+        {isLoggedIn && (
+          <Link to={`/recipe/${name}/edit`} className="btn btn-quiet">
+            ✏️ Edit
+          </Link>
+        )}
+      </div>
+
+      {recipe.description && (
+        <p className="recipe-description">{recipe.description}</p>
+      )}
 
       {recipe.temperature && (
-        <p>
-          Temperature: <strong>{recipe.temperature}</strong>
+        <p className="recipe-meta">
+          Oven: <strong>{recipe.temperature}</strong>
         </p>
       )}
 
-      <div className="recipe-tabs">
+      <div className="recipe-tabs" role="tablist">
         <button
           className={`recipe-tab${activeTab === "ingredients" ? " active" : ""}`}
           onClick={() => setActiveTab("ingredients")}
@@ -73,14 +84,15 @@ export default function RecipeDetails() {
         </button>
       </div>
 
-      <section className="recipe-section recipe-tab-content">
+      <section className="recipe-section recipe-tab-content card">
         {activeTab === "ingredients" ? (
           <ul className="ingredients-list">
             {recipe.ingredients.map(({ ingredient, measurement }) => (
               <li key={ingredient}>
-                <span className="measurement">
-                  {ingredient} ({measurement})
-                </span>
+                <span className="ingredient-name">{ingredient}</span>
+                {measurement && (
+                  <span className="ingredient-amount">{measurement}</span>
+                )}
               </li>
             ))}
           </ul>
@@ -90,20 +102,15 @@ export default function RecipeDetails() {
               .sort((a, b) => a.sequence - b.sequence)
               .map(({ sequence, step }) => (
                 <li key={sequence}>
-                  <span>
-                    {sequence}. {step}
+                  <span className="step-badge" aria-hidden="true">
+                    {sequence}
                   </span>
+                  <p>{step}</p>
                 </li>
               ))}
           </ol>
         )}
       </section>
-
-      {isLoggedIn && (
-        <Link to={`/recipe/${name}/edit`} className="edit-link button-link">
-          Edit Recipe
-        </Link>
-      )}
 
       {recipe.alternatives?.length > 0 && (
         <section className="recipe-section">
@@ -111,9 +118,7 @@ export default function RecipeDetails() {
           <ul className="alternatives-list">
             {recipe.alternatives.map(({ user, alternative }, i) => (
               <li key={i}>
-                <span>
-                  <strong>{user}:</strong> {alternative}
-                </span>
+                <strong>{user}:</strong> {alternative}
               </li>
             ))}
           </ul>
@@ -124,19 +129,18 @@ export default function RecipeDetails() {
         <section className="recipe-section recipe-stories">
           <h2>Stories</h2>
           {recipe.stories.map(({ user, story }, i) => (
-            <div key={i}>
-              <span>
-                <strong>{user}:</strong>
-              </span>
+            <blockquote key={i} className="story-quote">
               <p>{story}</p>
-            </div>
+              <footer>— {user}</footer>
+            </blockquote>
           ))}
         </section>
       )}
+
       {recipe.tags?.length > 0 && (
         <div className="recipe-tags">
           {recipe.tags.map((tag) => (
-            <span key={tag} className="recipe-tag">
+            <span key={tag} className="tag-chip">
               {tag}
             </span>
           ))}

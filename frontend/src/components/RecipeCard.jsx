@@ -7,10 +7,11 @@ function toSlug(title) {
 
 export default function RecipeCard({ title, description }) {
   return (
-    <Link to={`/recipe/${toSlug(title)}`} className="recipe-card-link">
-      <h3 className="recipe-card-title">
-        {title.length > 30 ? title.slice(0, 30) + "..." : title}
-      </h3>
+    <Link to={`/recipe/${toSlug(title)}`} className="recipe-card">
+      <h3 className="recipe-card-title">{title}</h3>
+      {description && (
+        <p className="recipe-card-description">{description}</p>
+      )}
     </Link>
   );
 }

@@ -24,9 +24,9 @@ app.use("/api", recipeRoutes);
 app.use("/api", memberRoutes);
 
 app.use((error, req, res, next) => {
-  if (res.headerSent) return next(error);
+  if (res.headersSent) return next(error);
   res
-    .status(error.code || 500)
+    .status(Number.isInteger(error.code) ? error.code : 500)
     .json({ message: error.message || "An unknown error occurred." });
 });
 

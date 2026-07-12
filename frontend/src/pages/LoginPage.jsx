@@ -34,7 +34,7 @@ export default function LoginPage() {
 
       login(data.username, data.token, data.expiresIn);
       navigate("/");
-    } catch (err) {
+    } catch {
       setError("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);
@@ -42,40 +42,53 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="login-page">
-      <h1>Family Login</h1>
-      <p className="login-text">
-        Only family members can login, but all are welcome to browse the
-        recipes!
-      </p>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="username">Username</label>
-          <input
-            id="username"
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        {error && (
-          <p className="login-error">
-            Rats! There was a problem logging you in.
-          </p>
-        )}
-        <button type="submit" className="button-link" disabled={isLoading}>
-          {isLoading ? "Logging in..." : "Login"}
-        </button>
-      </form>
+    <div className="login-page page">
+      <div className="login-card card">
+        <h1>Family Log In</h1>
+        <p className="login-text">
+          Only family members can log in — but everyone is welcome to browse
+          the recipes!
+        </p>
+        <form onSubmit={handleSubmit}>
+          <div className="field">
+            <label htmlFor="username">Username</label>
+            <input
+              id="username"
+              type="text"
+              autoComplete="username"
+              autoCapitalize="none"
+              autoCorrect="off"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          {error && (
+            <div className="error-banner" role="alert">
+              <strong>We couldn&rsquo;t log you in.</strong> {error}{" "}
+              Double-check your username and password, then try again.
+            </div>
+          )}
+          <button
+            type="submit"
+            className="btn btn-primary btn-lg btn-block"
+            disabled={isLoading}
+          >
+            {isLoading ? "Logging in…" : "Log in"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

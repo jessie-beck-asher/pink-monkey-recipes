@@ -1,7 +1,5 @@
 import mongoose from 'mongoose';
 
-const MONGODB_URI = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER}.mongodb.net/${process.env.MONGODB_DATABASE}?retryWrites=true&w=majority`;
-
 let cached = global.mongoose;
 
 if (!cached) {
@@ -14,6 +12,7 @@ async function dbConnect() {
   }
 
   if (!cached.promise) {
+    const MONGODB_URI = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_CLUSTER}.mongodb.net/${process.env.MONGODB_DATABASE}?retryWrites=true&w=majority`;
     cached.promise = mongoose.connect(MONGODB_URI, {
       bufferCommands: false,
       maxPoolSize: 5,
